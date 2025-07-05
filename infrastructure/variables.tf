@@ -12,4 +12,4 @@ variable "admin_password" {
   type    = string
   default = "P@ssword1234!" # Use env vars or Key Vault in production
 }
-msjdjfjhdfkhdfhdfhd
+msjdjfjhdfkhdfhdfhkjhsdkjdhd
