@@ -10,3 +10,4 @@ variable "admin_password" {
   default = "P@ssword1234!"  # Use env vars or Key Vault in production
 }
 sdffdfdfddfddsdffdfdfdfznbdbdsnb
+variable "sdfd,jbjdfjkfd"{
