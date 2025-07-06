@@ -1,4 +1,5 @@
-output "vm_name" {
-  value = azurerm_windows_virtual_machine.vm.name
+output "kube_config" {
+  value     = azurerm_kubernetes_cluster.aks_cluster.kube_config_raw
+  sensitive = true
 }
 

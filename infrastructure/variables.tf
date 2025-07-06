@@ -1,14 +1,42 @@
+variable "resource_group_name" {
+  description = "The name of the resource group"
+  type        = string
+  default     = "aks-h09-rg"
+}
+
 variable "location" {
-  type    = string
-  default = "East US"
+  description = "The Azure region to deploy resources"
+  type        = string
+  default     = "Canada Central"
 }
 
-variable "admin_username" {
-  type    = string
-  default = "azureuser"
+variable "aks_cluster_name" {
+  description = "The name of the AKS cluster"
+  type        = string
+  default     = "aks-h09-cluster"
 }
 
-variable "admin_password" {
-  type    = string
-  default = "P@ssword1234!" # Use env vars or Key Vault in production
+variable "dns_prefix" {
+  description = "DNS prefix for the AKS cluster"
+  type        = string
+  default     = "h09lab"
 }
+
+variable "node_vm_size" {
+  description = "The VM size for AKS nodes"
+  type        = string
+  default     = "Standard_B2s"
+}
+
+variable "min_node_count" {
+  description = "Minimum number of nodes"
+  type        = number
+  default     = 1
+}
+
+variable "max_node_count" {
+  description = "Maximum number of nodes"
+  type        = number
+  default     = 3
+}
+

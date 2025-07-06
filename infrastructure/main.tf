@@ -1,52 +1,35 @@
-resource "azurerm_resource_group" "rg" {
-  name     = "cst8918-a09-rg"
-  location = var.location
+resource "azurerm_resource_group" "aks_rg" {
+  name     = "aks-h09-rg"
+  location = "Canada Central"
 }
 
-resource "azurerm_virtual_network" "vnet" {
-  name                = "cst8918-vnet"
-  address_space       = ["10.0.0.0/16"]
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
-}
+resource "azurerm_kubernetes_cluster" "aks_cluster" {
+  name                = "aks-h09-cluster"
+  location            = azurerm_resource_group.aks_rg.location
+  resource_group_name = azurerm_resource_group.aks_rg.name
+  dns_prefix          = "h09lab"
 
-resource "azurerm_subnet" "subnet" {
-  name                 = "cst8918-subnet"
-  resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.0.1.0/24"]
-}
-
-resource "azurerm_network_interface" "nic" {
-  name                = "cst8918-nic"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
-
-  ip_configuration {
-    name                          = "internal"
-    subnet_id                     = azurerm_subnet.subnet.id
-    private_ip_address_allocation = "Dynamic"
+  default_node_pool {
+    name                = "default"
+    vm_size             = "Standard_B2s"
+    enable_auto_scaling = true
+    min_count           = 1
+    max_count           = 3
+    type                = "VirtualMachineScaleSets"
   }
-}
 
-resource "azurerm_windows_virtual_machine" "vm" {
-  name                  = "cst8918-vm"
-  resource_group_name   = azurerm_resource_group.rg.name
-  location              = var.location
-  size                  = "Standard_B1s"
-  admin_username        = var.admin_username
-  admin_password        = var.admin_password
-  network_interface_ids = [azurerm_network_interface.nic.id]
-  os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-    name                 = "osdisk"
+  identity {
+    type = "SystemAssigned"
   }
-  source_image_reference {
-    publisher = "MicrosoftWindowsServer"
-    offer     = "WindowsServer"
-    sku       = "2019-Datacenter"
-    version   = "latest"
+
+  network_profile {
+    network_plugin    = "azure"
+    load_balancer_sku = "standard"
+  }
+
+  tags = {
+    environment = "lab"
+    owner       = "student"
   }
 }
 
